@@ -72,19 +72,17 @@ namespace API.Controllers
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetProductBrands()
         {
-            // TODO: implement specific methods to load the projection
-            var products = await repo.ListAllAsync();
-            var brands = products.Select(x => x.Brand).Distinct();
-            return Ok(brands);
+            var spec = new BrandListSpecification();
+
+            return Ok(await repo.ListAsync(spec));
         }
 
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetProductTypes()
         {
-            // TODO: implement specific methods to load the projection
-            var products = await repo.ListAllAsync();
-            var types = products.Select(x => x.Type).Distinct();
-            return Ok(types);
+            var spec = new BrandListSpecification();
+
+            return Ok(await repo.ListAsync(spec));
         }
     }
 }
