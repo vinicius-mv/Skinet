@@ -79,7 +79,7 @@ namespace API.Controllers
         [HttpGet("types")]
         public async Task<ActionResult<IReadOnlyList<string>>> GetProductTypes()
         {
-            var spec = new BrandListSpecification();
+            var spec = new TypeListSpecification();
 
             return Ok(await repo.ListAsync(spec));
         }
