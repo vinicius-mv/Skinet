@@ -23,6 +23,8 @@ public class ExceptionMiddleware(IHostEnvironment env, RequestDelegate next)
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
+        Console.WriteLine("IsDevelopment: " + env.IsDevelopment());
+
         var response = env.IsDevelopment()
             ? new ApiErrorResponse(context.Response.StatusCode, ex.Message, ex.StackTrace)
             : new ApiErrorResponse(context.Response.StatusCode, ex.Message, "Internal server error");
