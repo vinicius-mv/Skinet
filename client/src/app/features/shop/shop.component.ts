@@ -7,6 +7,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { FiltersDialogComponent } from './filters-dialog/filters-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 
 @Component({
   selector: 'app-shop',
@@ -14,7 +17,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatCardModule,
     ProductItemComponent,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatMenuModule,
+    MatSelectModule,
+    MatListModule,
   ],
   templateUrl: './shop.component.html',
   styleUrl: './shop.component.scss'
@@ -25,6 +31,12 @@ export class ShopComponent implements OnInit {
   products: Product[] = [];
   selectedBrands: string[] = [];
   selectedTypes: string[] = [];
+  selectedSort: string = 'name';
+  sortOptions = [
+    { name: 'Alphabetical', value: 'name' },
+    { name: 'Price: Low-High', value: 'priceAsc' },
+    { name: 'Price: High-Low', value: 'priceDesc' },
+  ];
 
   ngOnInit(): void {
     this.initializeShop();
@@ -33,12 +45,22 @@ export class ShopComponent implements OnInit {
   initializeShop() {
     this.shopService.getBrands();
     this.shopService.getTypes();
+    this.getProducts();
+  }
 
-    this.shopService.getProducts().subscribe({
+  getProducts() {
+    this.shopService.getProducts(this.selectedBrands, this.selectedTypes, this.selectedSort).subscribe({
       next: response => this.products = response.data,
-      error: error => console.log(error),
-      complete: () => console.log('complete')
-    });
+      error: err => console.log(err)
+    })
+  }
+
+  onSortChange(event: MatSelectionListChange) {
+    const selectedOption = event.options[0]; // [multiple]="false", only one element in the list always
+    if (selectedOption) {
+      this.selectedSort = selectedOption.value;
+      this.getProducts();
+    }
   }
 
   openFilterDialog() {
@@ -55,11 +77,7 @@ export class ShopComponent implements OnInit {
         if (result) {
           this.selectedBrands = result.selectedBrands;
           this.selectedTypes = result.selectedTypes;
-
-          this.shopService.getProducts(this.selectedBrands, this.selectedTypes).subscribe({
-            next: response => this.products = response.data,
-            error: err => console.log(err)
-          });
+          this.getProducts();
         }
       }
     })
