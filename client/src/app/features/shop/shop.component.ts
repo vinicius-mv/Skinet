@@ -53,10 +53,13 @@ export class ShopComponent implements OnInit {
     dialogRef.afterClosed().subscribe({
       next: result => {
         if (result) {
-          console.log(result);
           this.selectedBrands = result.selectedBrands;
           this.selectedTypes = result.selectedTypes;
-          // apply filters
+
+          this.shopService.getProducts(this.selectedBrands, this.selectedTypes).subscribe({
+            next: response => this.products = response.data,
+            error: err => console.log(err)
+          });
         }
       }
     })
