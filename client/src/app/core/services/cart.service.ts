@@ -35,7 +35,7 @@ export class CartService {
   }
 
   private addOrUpdateItem(items: CartItem[], item: CartItem, quantity: number): CartItem[] {
-    const index = items.findIndex(x => x.productId == item.productId);
+    const index = items.findIndex(x => x.productId === item.productId);
     if (index === -1) {
       item.quantity = quantity;
       items.push(item);
