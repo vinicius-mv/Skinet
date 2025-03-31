@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Cart, CartItem } from '../../shared/models/cart';
@@ -15,6 +15,20 @@ export class CartService {
   cart = signal<Cart | null>(null);
   itemCount = computed(() => {
     return this.cart()?.items.reduce((sum, item) => sum + item.quantity, 0)
+  });
+  totals = computed(() => {
+    const cart = this.cart();
+    if (cart == null) return null;
+    const subtotal = cart.items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+    const shipping = 0;
+    const discount = 0;
+
+    return {
+      subtotal: subtotal,
+      discount: discount,
+      shipping: shipping,
+      total: subtotal + shipping - discount
+    }
   });
 
   getCart(id: string) {
