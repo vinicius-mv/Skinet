@@ -47,13 +47,14 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     {
         if (User.Identity?.IsAuthenticated == false) return NoContent();
 
-        var user = await signInManager.UserManager.GetUserByEmail(base.User);
+        var user = await signInManager.UserManager.GetUserByEmailWithAddress(base.User);
 
         return Ok(new
         {
             user.FirstName,
             user.LastName,
-            user.Email
+            user.Email,
+            Address = user.Address?.ToDto()
         });
     }
 
