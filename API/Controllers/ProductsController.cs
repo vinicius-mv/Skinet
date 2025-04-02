@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class ProductsController(IGenericRepository<Product> repo) : BaseApiController
     {
         [HttpGet]
@@ -25,7 +23,7 @@ namespace API.Controllers
 
             if (product == null) return NotFound();
 
-            return product;
+            return Ok(product);
         }
 
         [HttpPost]
